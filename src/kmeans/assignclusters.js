@@ -7,8 +7,8 @@ const {
 /**
  * @private _assign
  *
- * @param   {Object} point
- * @param   {Array}  clusterCentroids
+ * @param {Object} point
+ * @param {Array}  clusterCentroids
  *
  * @returns {Object} A point with a cluster label.
  */
@@ -16,8 +16,7 @@ const {
 function _assign (point, clusterCentroids) {
   const { label } = clusterCentroids.reduce((a, b) => {
     return getDistance(point, a) < getDistance(point, b) ? a : b;
-  },
-  clusterCentroids[0]);
+  }, clusterCentroids[0]);
 
   return ({ ...point, label });
 }

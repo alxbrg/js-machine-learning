@@ -1,7 +1,7 @@
 'use strict';
 
 function getMean (points) {
-  // sum x & y values
+  // sum x values
   const mean = points.reduce((acc, p) => ({
     ...p,
     x: (acc && acc.x + p.x) || p.x,

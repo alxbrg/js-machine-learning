@@ -5,6 +5,10 @@ const {
 } = require('./assignclusters');
 
 const {
+  calculateCost,
+} = require('./calculatecost');
+
+const {
   getClusters,
 } = require('./getclusters');
 
@@ -13,59 +17,81 @@ const {
 } = require('./getmean');
 
 const {
-  initClusterCentroids,
-} = require('./initclustercentroids');
-
-const {
-  getMax,
-  getMin,
-} = require('../utils');
+  initCentroids,
+} = require('./initcentroids');
 
 class Kmeans {
-  constructor ({ K, key, iterations }) {
+  /**
+   * @param {Number} K - Number of expected clusters
+   * @param {String} key - Key holding the values used for calculating the means
+   * @param {Number} maxIterations - Maximum number of iterations
+   */
+  constructor ({
+    K,
+    key,
+    maxIterations = 10,
+  }) {
     this._K = K;
-    this._iterations = iterations;
+    this._maxIterations = maxIterations;
     this._key = key;
   }
 
+  /**
+   * Train a data set
+   * @param {Array}   dataSet - Training data set
+   *
+   * @return {Object} - deviation - Mean distance between each data points and
+   *                  their assigned cluster's mean
+   *                  - centroids
+   *                  - clusters
+   */
   train (dataSet) {
     // rename key to `x`
-    this.dataSet = dataSet.map((data) => {
-      data.x = data[this._key];
-      delete data[this._key];
-      return data;
+    const _dataSet = dataSet.map((data) => {
+      return { x: data[this._key] };
     });
 
-    // initialize random cluster centroids
-    let centroids = initClusterCentroids(
-      this._K,
-      [ getMin('x', this.dataSet), getMax('x', this.dataSet) ]
-    );
+    let centroids = initCentroids(this._K, _dataSet);
     let clusters;
+    let cost;
 
-    // TODO: cost function
-    let count = 0;
-    while (count < this._iterations) {
+    for (let i = 0; i < this._maxIterations; i++) {
       // assign cluster labels to data points and group the latter by cluster
-      const clusteredData = assignClusters(this.dataSet, centroids);
+      const clusteredData = assignClusters(_dataSet, centroids);
       clusters = getClusters(clusteredData);
 
       // get mean values for each cluster and assign them to the centroids
       centroids = clusters.map(cluster => getMean(cluster));
 
-      count++;
+      // calculate cost
+      const _cost = calculateCost(centroids, clusters);
+
+      // if `_cost` is equal to previous `cost`, assume we've reached the local
+      // optimum (if it's greater than previous `cost`, something's going wrong)
+      if (_cost >= cost) break;
+      cost = _cost;
     }
 
-    this.centroids = centroids;
-    this.clusters = clusters;
+    return {
+      deviation: Math.pow(cost, 0.5) / dataSet.length,
+      centroids,
+      clusters,
+    };
   }
 
-  label (data) {
-    if (!this.centroids) {
-      throw new Error('First train the algorithm using the `train` method');
+  /**
+   * Label a data point
+   * @param {Object} data - Data point
+   * @param {Array} centroids - Array of cluster centroids
+   *
+   * @returns {Array} An array of clusters.
+   */
+  label (data, centroids) {
+    if (!Array.isArray(centroids)) {
+      throw new Error('An array of `centroids` is required');
     }
 
-    return assignClusters(data, this.centroids);
+    return assignClusters(data, centroids);
   }
 }
 

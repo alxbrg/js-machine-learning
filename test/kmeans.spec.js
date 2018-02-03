@@ -10,12 +10,20 @@ const {
 
 describe('kmeans', () => {
   it('should work', () => {
-    const k = new Kmeans({ K: 3, iterations: 10, key: 'value' });
+    const k = new Kmeans({
+      K: 3,
+      maxIterations: 10,
+      key: 'value',
+    });
 
-    k.train(kmeansDataSet);
+    const { centroids } = k.train(kmeansDataSet);
 
-    expect(k.label([ { x: 2 } ])).toEqual([ { x: 2, label: 0 } ]);
-    expect(k.label([ { x: 100 } ])).toEqual([ { x: 100, label: 1 } ]);
-    expect(k.label([ { x: 150 } ])).toEqual([ { x: 150, label: 2 } ]);
+    expect(
+      centroids
+    ).toEqual([
+      { x: 14.428571428571429, label: 0 },
+      { x: 103, label: 1 },
+      { x: 170, label: 2 },
+    ]);
   });
 });

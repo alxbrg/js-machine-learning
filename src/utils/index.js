@@ -15,12 +15,7 @@
  * @returns  {Number} An absolute distance between two points.
  */
 
-function getDistance (a, b) {
-  const { x: x1 } = a;
-  const { x: x2 } = b;
-
-  return Math.abs(x1 - x2);
-};
+const getDistance = (a, b) => Math.abs(a.x - b.x);
 
 /**
  * @param   {String} key
@@ -30,7 +25,10 @@ function getDistance (a, b) {
  */
 
 const getMax = (key, points) =>
-  points.reduce((a, b) => Math.max(a[key] || a, b[key] || b));
+  points.reduce((a, b) => Math.max(
+    a[key] === undefined ? a : a[key],
+    b[key] === undefined ? b : b[key]
+  ));
 
 /**
  * @param   {String} key
@@ -40,8 +38,10 @@ const getMax = (key, points) =>
  */
 
 const getMin = (key, points) =>
-  points.reduce((a, b) => Math.min(a[key] || a, b[key] || b));
-
+  points.reduce((a, b) => Math.min(
+    a[key] === undefined ? a : a[key],
+    b[key] === undefined ? b : b[key]
+  ));
 /**
  * @param   {Number} min min value
  * @param   {Number} max max value
