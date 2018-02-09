@@ -5,7 +5,7 @@ const {
 } = require('../utils');
 
 /**
- * @private _assign
+ * @private assignCluster
  *
  * @param {Object} point
  * @param {Array}  clusterCentroids
@@ -13,16 +13,16 @@ const {
  * @returns {Object} A point with a cluster label.
  */
 
-function _assign (point, clusterCentroids) {
+function assignCluster (point, clusterCentroids) {
   const { label } = clusterCentroids.reduce((a, b) => {
     return getDistance(point, a) < getDistance(point, b) ? a : b;
-  }, clusterCentroids[0]);
+  });
 
-  return ({ ...point, label });
+  return { ...point, label };
 }
 
 /**
- * @function  assignClusters
+ * @function  labelData
  *
  * @param {*} points
  * @param {*} clusterCentroids
@@ -30,9 +30,9 @@ function _assign (point, clusterCentroids) {
  * @returns {Array} An array of clusters.
  */
 
-const assignClusters = (points, clusterCentroids) =>
-  points.map(point => _assign(point, clusterCentroids));
+const labelData = (points, clusterCentroids) =>
+  points.map(point => assignCluster(point, clusterCentroids));
 
 module.exports = {
-  assignClusters,
+  labelData,
 };

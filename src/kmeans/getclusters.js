@@ -1,10 +1,12 @@
 'use strict';
 
-function getClusters (clusteredData) {
-  return clusteredData.reduce((acc, point) => {
-    acc[point.label] = [].concat(acc[point.label] || [], point);
+function getClusters (labeledData) {
+  return labeledData.reduce((acc, point) => {
+    const cluster = acc[point.label] === undefined ? [] : acc[point.label];
+    acc[point.label] = cluster.concat(point);
     return acc;
-  }, []);
+  }, [])
+    .filter(cluster => cluster !== undefined);
 }
 
 module.exports = {

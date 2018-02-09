@@ -1,8 +1,8 @@
 'use strict';
 
 const {
-  assignClusters,
-} = require('./assignclusters');
+  labelData,
+} = require('./labeldata');
 
 const {
   calculateCost,
@@ -27,38 +27,33 @@ class Kmeans {
    * @param {Number} maxIterations - Maximum number of iterations
    */
   constructor ({
+    initialCentroids = [],
     K,
     key,
     maxIterations = 10,
+    // TODO: trainedData = [],
+    // TODO: input an acceptable margin of error
   }) {
+    // prep initial centroids
+    this._initialCentroids = initialCentroids.map((centroid, i) =>
+      ({
+        x: centroid[key] || centroid.x,
+        label: centroid.label || i,
+      }));
     this._K = K;
     this._maxIterations = maxIterations;
     this._key = key;
   }
 
-  /**
-   * Train a data set
-   * @param {Array}   dataSet - Training data set
-   *
-   * @return {Object} - deviation - Mean distance between each data points and
-   *                  their assigned cluster's mean
-   *                  - centroids
-   *                  - clusters
-   */
-  train (dataSet) {
-    // rename key to `x`
-    const _dataSet = dataSet.map((data) => {
-      return { x: data[this._key] };
-    });
-
-    let centroids = initCentroids(this._K, _dataSet);
+  _train (trainingData, initialCentroids) {
+    let centroids = [].concat(initialCentroids);
     let clusters;
     let cost;
 
     for (let i = 0; i < this._maxIterations; i++) {
       // assign cluster labels to data points and group the latter by cluster
-      const clusteredData = assignClusters(_dataSet, centroids);
-      clusters = getClusters(clusteredData);
+      const labeledData = labelData(trainingData, centroids);
+      clusters = getClusters(labeledData);
 
       // get mean values for each cluster and assign them to the centroids
       centroids = clusters.map(cluster => getMean(cluster));
@@ -73,10 +68,51 @@ class Kmeans {
     }
 
     return {
-      deviation: Math.pow(cost, 0.5) / dataSet.length,
+      // TODO: use percentages ('margin of error') instead of absolute values
+      deviation: Math.sqrt(cost) / trainingData.length,
       centroids,
-      clusters,
     };
+  }
+
+  /**
+   * Train a data set
+   * @param {Array}   trainingData - Training data set
+   *
+   * @return {Object} - deviation - Mean distance between each data points and
+   *                  their assigned cluster's mean
+   *                  - centroids
+   *                  - clusters
+   */
+  train (trainingData) {
+    // prep trainingData
+    const _trainingData = trainingData.map(data => ({ x: data[this._key] }));
+
+    let deviation;
+    let trainedData;
+    let optimum;
+
+    // initialize random centroids until we reach global optimum
+    for (let i = 0; i < this._maxIterations; i++) {
+      const randomCentroids = initCentroids(
+        this._K,
+        _trainingData,
+        this._initialCentroids
+      );
+
+      trainedData = this._train(_trainingData, randomCentroids);
+
+      const { deviation: _deviation } = trainedData;
+
+      if (deviation === undefined || _deviation < deviation) {
+        deviation = _deviation;
+        optimum = {
+          deviation,
+          ...trainedData,
+        };
+      }
+    }
+
+    return optimum;
   }
 
   /**
@@ -91,7 +127,7 @@ class Kmeans {
       throw new Error('An array of `centroids` is required');
     }
 
-    return assignClusters(data, centroids);
+    return labelData(data, centroids);
   }
 }
 

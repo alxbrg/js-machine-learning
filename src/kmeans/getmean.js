@@ -1,13 +1,14 @@
 'use strict';
 
-function getMean (points) {
+function getMean (cluster) {
   // sum x values
-  const mean = points.reduce((acc, p) => ({
-    ...p,
-    x: (acc && acc.x + p.x) || p.x,
-  }));
+  const mean = cluster.reduce((sum, point) =>
+    sum + point.x, 0) / cluster.length;
 
-  return ({ ...mean, x: mean.x / points.length });
+  return {
+    label: cluster[0].label,
+    x: mean,
+  };
 }
 
 module.exports = {

@@ -1,6 +1,6 @@
 'use strict';
 
-const kmeansDataSet = [
+const trainingData = [
   { value: 0 },
   { value: 1 },
   { value: 2 },
@@ -19,5 +19,5 @@ const kmeansDataSet = [
 ];
 
 module.exports = {
-  kmeansDataSet,
+  trainingData,
 };
