@@ -115,7 +115,8 @@ function label ({
     throw new Error('An array of `centroids` is required');
   }
 
-  return labelData(_data, centroids);
+  return labelData(_data, centroids)
+    .map(point =>  ({ ...point, [key]: point.x }));
 }
 
 module.exports = {
