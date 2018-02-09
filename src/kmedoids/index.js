@@ -71,7 +71,7 @@ function train ({ data, key }, K, maxIterations = 20) {
   return medoids;
 }
 
-function label (medoids, { data, key }) {
+function label ({ medoids, data, key }) {
   // prep data
   const _data = data.map(point => ({ x: point[key] }));
   return labelData(medoids, _data);

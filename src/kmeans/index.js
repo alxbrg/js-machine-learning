@@ -103,12 +103,19 @@ function train ({ data, key, initialCentroids = [] }, K, maxIterations = 20) {
  *
  * @returns {Array} An array of clusters.
  */
-function label (centroids, data) {
+function label ({
+  centroids,
+  data,
+  key,
+}) {
+  // prep data
+  const _data = data.map(data => ({ x: data[key] }));
+
   if (!Array.isArray(centroids)) {
     throw new Error('An array of `centroids` is required');
   }
 
-  return labelData(data, centroids);
+  return labelData(_data, centroids);
 }
 
 module.exports = {
