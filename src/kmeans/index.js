@@ -109,7 +109,7 @@ function label ({
   key,
 }) {
   // prep data
-  const _data = data.map(data => ({ x: data[key] }));
+  const _data = data.map(point => ({ ...point, x: point[key] }));
 
   if (!Array.isArray(centroids)) {
     throw new Error('An array of `centroids` is required');
