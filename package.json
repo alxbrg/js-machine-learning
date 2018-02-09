@@ -1,6 +1,6 @@
 {
   "name": "@alxbrg/js-machine-learning",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A bare-bones JavaScript implementation of machine-learning algorithms",
   "main": "src/index.js",
   "author": "Alexandre Borrego",
