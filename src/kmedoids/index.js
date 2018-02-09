@@ -76,7 +76,7 @@ function label ({ medoids, data, key }) {
   const _data = data.map(point => ({ ...point, x: point[key] }));
 
   return labelData(medoids, _data)
-    .map(point =>  ({ ...point, [key]: point.x }));
+    .map(point =>  ({ ...point, [key]: medoids[point.label].x }));
 }
 
 module.exports = {

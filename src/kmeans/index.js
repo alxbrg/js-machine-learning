@@ -116,7 +116,7 @@ function label ({
   }
 
   return labelData(_data, centroids)
-    .map(point =>  ({ ...point, [key]: point.x }));
+    .map(point =>  ({ ...point, [key]: centroids[point.label].x }));
 }
 
 module.exports = {
