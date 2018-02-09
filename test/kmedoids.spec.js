@@ -1,7 +1,7 @@
 'use strict';
 
 const {
-  Kmedoids,
+  kmedoids,
 } = require('../src');
 
 const {
@@ -11,7 +11,7 @@ const {
 describe('kmedoids', () => {
   it('should work', () => {
     const K = 3;
-    const medoids = Kmedoids.train({ key: 'value', data: trainingData }, K);
+    const medoids = kmedoids.train({ key: 'value', data: trainingData }, K);
 
     const expected = [
       { x: 35, label: 0 },

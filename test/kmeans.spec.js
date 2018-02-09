@@ -1,7 +1,7 @@
 'use strict';
 
 const {
-  Kmeans,
+  kmeans,
 } = require('../src');
 
 const {
@@ -16,13 +16,7 @@ describe('kmeans', () => {
   ];
 
   it('should work without intialCentroids input', () => {
-    const k = new Kmeans({
-      K: 3,
-      maxIterations: 20,
-      key: 'value',
-    });
-
-    const { centroids } = k.train(trainingData);
+    const { centroids } = kmeans.train({ data: trainingData, key: 'value' }, 3);
 
     expect(
       centroids
@@ -30,18 +24,18 @@ describe('kmeans', () => {
   });
 
   it('should work with intialCentroids input', () => {
-    const k = new Kmeans({
-      K: 3,
-      maxIterations: 10,
-      key: 'value',
-      initialCentroids: [
-        { x: 0, label: 0 },
-        { x: 100, label: 1 },
-        { x: 150, label: 2 },
-      ],
-    });
-
-    const { centroids } = k.train(trainingData);
+    const { centroids } = kmeans.train(
+      {
+        data: trainingData,
+        key: 'value',
+        initialCentroids: [
+          { x: 0, label: 0 },
+          { x: 100, label: 1 },
+          { x: 150, label: 2 },
+        ],
+      },
+      3,
+    );
 
     expect(
       centroids

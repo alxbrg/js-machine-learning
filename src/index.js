@@ -1,14 +1,14 @@
 'use strict';
 
 const {
-  Kmeans,
+  kmeans,
 } = require('./kmeans');
 
 const {
-  Kmedoids,
+  kmedoids,
 } = require('./kmedoids');
 
 module.exports = {
-  Kmeans,
-  Kmedoids,
+  kmeans,
+  kmedoids,
 };

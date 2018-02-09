@@ -78,7 +78,7 @@ function label (medoids, { data, key }) {
 }
 
 module.exports = {
-  Kmedoids: {
+  kmedoids: {
     label,
     train,
   },
