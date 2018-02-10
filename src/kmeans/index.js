@@ -72,15 +72,17 @@ function train ({ data, key, initialCentroids = [] }, K, maxIterations = 20) {
   let trainedData;
   let optimum;
 
-  // initialize random centroids until we reach global optimum
+  // initialize centroids until we reach global optimum
   for (let i = 0; i < maxIterations; i++) {
-    const randomCentroids = initCentroids(
+    const newCentroids = initCentroids(
       K,
       _trainingData,
-      _initialCentroids
+      _initialCentroids,
+      maxIterations,
+      i
     );
 
-    trainedData = _train(_trainingData, randomCentroids, maxIterations);
+    trainedData = _train(_trainingData, newCentroids, maxIterations);
 
     const { deviation: _deviation } = trainedData;
 

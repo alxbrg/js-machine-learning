@@ -13,7 +13,7 @@ const {
  */
 
 // TODO: combine with kMeans++ method of setting random initial centroids
-function initCentroids (K, dataSet, centroids) {
+function initCentroids (K, dataSet, centroids, maxIterations, index) {
   const min = getMin('x', [...dataSet, ...centroids]);
   const max = getMax('x', [...dataSet, ...centroids]);
 
@@ -31,26 +31,30 @@ function initCentroids (K, dataSet, centroids) {
     return sum;
   }, 0) / (centroids.length - 1);
 
-  const initialCentroids = Array(K).fill().map((_, i) => {
-    // use the mean distance between input centroids if it exists
-    // if the mean distance is 0, there's either 0 or only 1 input centroid
-    // so we spread the initial centroids evenly across the data
-    const meanDist = meanCentroidDist || ((max - min) / K);
+  // use the mean distance between input centroids if it exists
+  // if the mean distance is 0, there's either 0 or only 1 input centroid
+  // so we spread the initial centroids evenly across the data
+  const meanDist = meanCentroidDist || ((max - min) / K);
 
-    // generate new semi-random centroids
-    const ran = (Math.random() * meanDist) - (meanDist / 2);
+  const initialCentroids = Array(K).fill().map((_, i) => {
+    let delta = (meanDist / 2 / maxIterations) * index;
+
+    // delta modifier should:
+    //   - always be positive for the first centroid (since based on the min)
+    //   - always be negative for the last centroids (since base on the max)
+    //   - otherwise alternate between negative and positive values
+    if ((i !== 0 && index % 2) || i === K - 1) delta *= -1;
 
     if (!inputLabels.includes(i)) {
       return {
-        x: (meanDist * i) + min + ran,
+        x: (meanDist * i) + min + delta,
       };
     }
 
     // use input centroid
     const { x } = centroids.find(centroid => centroid.label === i);
-    // semi-randomize
     return {
-      x: x + ran,
+      x: x + delta,
     };
   });
 

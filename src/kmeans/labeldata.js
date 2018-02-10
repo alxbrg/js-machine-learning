@@ -8,13 +8,13 @@ const {
  * @private assignCluster
  *
  * @param {Object} point
- * @param {Array}  clusterCentroids
+ * @param {Array}  centroids
  *
  * @returns {Object} A point with a cluster label.
  */
 
-function assignCluster (point, clusterCentroids) {
-  const { label } = clusterCentroids.reduce((a, b) => {
+function assignCluster (point, centroids) {
+  const { label } = centroids.reduce((a, b) => {
     return getDistance(point, a) < getDistance(point, b) ? a : b;
   });
 
@@ -25,13 +25,13 @@ function assignCluster (point, clusterCentroids) {
  * @function  labelData
  *
  * @param {*} points
- * @param {*} clusterCentroids
+ * @param {*} centroids
  *
  * @returns {Array} An array of clusters.
  */
 
-const labelData = (points, clusterCentroids) =>
-  points.map(point => assignCluster(point, clusterCentroids));
+const labelData = (points, centroids) =>
+  points.map(point => assignCluster(point, centroids));
 
 module.exports = {
   labelData,
