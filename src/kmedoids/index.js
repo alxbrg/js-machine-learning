@@ -9,66 +9,43 @@ const {
 } = require('./getmedoids');
 
 const {
-  initMedoids,
-} = require('./initmedoids');
+  build,
+} = require('./build');
 
 const {
   labelData,
 } = require('./labeldata');
 
-function _train (data, K, maxIterations) {
-  // initialize random medoids
-  let medoids = initMedoids(K, data);
+function train ({ data, key }, K, maxIterations = 20) {
+  // prep data
+  const _data = data.map(point => ({ x: point[key] }));
+
+  // build initial medoids
+  let medoids = build(_data, K);
   let count = 0;
   let cost;
 
   while (count < maxIterations) {
     // (re-)label the data
-    const labeledData = labelData(medoids, data);
+    const labeledData = labelData(medoids, _data);
 
     // compute the (new) cost
     const _cost = computeCost(labeledData, medoids);
 
     // if cost decreased
     if (cost === undefined || _cost < cost) {
-      // get medoids from labeled data
+      // get medoids from labeled _data
       medoids = getMedoids(labeledData);
       cost = _cost;
       count++;
     } else {
-      cost = _cost;
       break;
     }
   }
 
   return {
-    cost,
     medoids,
   };
-}
-
-function train ({ data, key }, K, maxIterations = 20) {
-  // prep data
-  const _data = data.map(point => ({ x: point[key] }));
-  let minCost;
-  let count = 0;
-  let medoids;
-
-  while (count < maxIterations) {
-    const {
-      cost,
-      medoids: _medoids,
-    } = _train(_data, K, maxIterations);
-
-    if (minCost === undefined || cost < minCost) {
-      medoids = _medoids;
-      minCost = cost;
-    }
-
-    count++;
-  }
-
-  return medoids;
 }
 
 function label ({ medoids, data, key }) {

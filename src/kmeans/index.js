@@ -44,7 +44,7 @@ function _train (trainingData, initialCentroids, maxIterations) {
 
   return {
     // TODO: use percentages ('margin of error') instead of absolute values
-    deviation: Math.sqrt(cost) / trainingData.length,
+    cost,
     centroids,
   };
 }
@@ -55,8 +55,7 @@ function _train (trainingData, initialCentroids, maxIterations) {
  * @param {Number} K - Number of expected clusters
  * @param {Number} maxIterations - Maximum number of iterations
  *
- * @return {Object} - deviation - Mean distance between each data points and
- *                  their assigned cluster's mean
+ * @return {Object} - cost - Sum of squared errors
  *                  - trainedData
  */
 function train ({ data, key, initialCentroids = [] }, K, maxIterations = 20) {
@@ -68,7 +67,7 @@ function train ({ data, key, initialCentroids = [] }, K, maxIterations = 20) {
       label: centroid.label || i,
     }));
 
-  let deviation;
+  let cost;
   let trainedData;
   let optimum;
 
@@ -84,12 +83,12 @@ function train ({ data, key, initialCentroids = [] }, K, maxIterations = 20) {
 
     trainedData = _train(_trainingData, newCentroids, maxIterations);
 
-    const { deviation: _deviation } = trainedData;
+    const { cost: _cost } = trainedData;
 
-    if (deviation === undefined || _deviation < deviation) {
-      deviation = _deviation;
+    if (cost === undefined || _cost < cost) {
+      cost = _cost;
       optimum = {
-        deviation,
+        cost,
         ...trainedData,
       };
     }
