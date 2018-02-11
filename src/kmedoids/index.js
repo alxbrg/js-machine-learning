@@ -17,6 +17,8 @@ const {
 } = require('./labeldata');
 
 function train ({ data, key }, K, maxIterations = 20) {
+  const now = new Date().valueOf();
+
   // prep data
   const _data = data.map(point => ({ x: point[key] }));
 

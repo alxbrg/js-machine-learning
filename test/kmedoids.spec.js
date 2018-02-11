@@ -11,7 +11,14 @@ const {
 describe('build', () => {
   it('should work', () => {
     const K = 3;
-    const { medoids } = kmedoids.train({ data: trainingData, key: 'value' }, K);
+
+    const { medoids } = kmedoids.train(
+      {
+        data: trainingData,
+        key: 'value',
+      },
+      K,
+    );
 
     const expected = [
       { x: 35, label: 0 },

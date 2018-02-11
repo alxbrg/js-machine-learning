@@ -8,7 +8,7 @@ function getClosestMedoid (medoids, point) {
   let closestMedoid = medoids[0];
 
   // for each medoid get the medoid closest to the point
-  for (let i = 0; i < medoids.length; i++) {
+  for (let i = 0, l = medoids.length; i < l; i++) {
     const medoid = medoids[i] || closestMedoid;
 
     if (getDistance(point, medoid) < getDistance(point, closestMedoid)) {
@@ -22,7 +22,9 @@ function getClosestMedoid (medoids, point) {
 function labelData (medoids, data) {
   const labeledData = [];
 
-  for (const point of data) {
+  for (let i = 0, l = data.length; i < l; i++) {
+    const point = data[i];
+
     const { label } = getClosestMedoid(medoids, point);
 
     labeledData.push({
