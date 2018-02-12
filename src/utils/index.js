@@ -15,19 +15,7 @@
  * @returns  {Number} An absolute distance between two points.
  */
 
-const map = new Map();
-
-function getDistance (a, b) {
-  const key = a.x + b.x;
-
-  if (map.has(key)) {
-    return map.get(key);
-  } else {
-    const dist = Math.abs(a.x - b.x);
-    map.set(key, dist);
-    return dist;
-  }
-}
+const getDistance = (a, b) => Math.abs(a.x - b.x);
 
 /**
  * @param   {String} key

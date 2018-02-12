@@ -8,13 +8,11 @@ const {
   getDistance,
 } = require('../utils');
 
-const map = new Map();
-
-function getClosestObject (set, object) {
+function getClosestObject (map, set, object) {
   let closest;
   let minDist;
 
-  const key = `${set.length}${object.x}`;
+  const key = object.x;
 
   if (map.has(key)) {
     return map.get(key);
@@ -67,6 +65,7 @@ function build (data, K) {
     let selected;
 
     const mapI = new Map();
+    const mapC = new Map();
 
     /**
      * 2.
@@ -103,7 +102,7 @@ function build (data, K) {
           if (mapJ.has(key)) {
             gain += mapJ.get(key);
           } else {
-            const closest = getClosestObject(S, objectJ);
+            const closest = getClosestObject(mapC, S, objectJ);
             const dissimilarity = getDistance(closest, objectJ);
 
             /**
